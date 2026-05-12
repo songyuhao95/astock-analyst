@@ -35,19 +35,19 @@
 安装到全局 skills：
 
 ```powershell
-npx skills add https://github.com/songyuhao95/agent-skills --skill astock-analyst -g -y --copy
+npx skills add https://github.com/songyuhao95/astock-analyst --skill astock-analyst -g -y --copy
 ```
 
 安装到 Codex：
 
 ```powershell
-npx skills add https://github.com/songyuhao95/agent-skills --skill astock-analyst --agent codex -g -y --copy
+npx skills add https://github.com/songyuhao95/astock-analyst --skill astock-analyst --agent codex -g -y --copy
 ```
 
 安装到 Claude Code：
 
 ```powershell
-npx skills add https://github.com/songyuhao95/agent-skills --skill astock-analyst --agent claude-code -g -y --copy
+npx skills add https://github.com/songyuhao95/astock-analyst --skill astock-analyst --agent claude-code -g -y --copy
 ```
 
 ### 手动安装到 Claude Code
@@ -62,7 +62,7 @@ Windows PowerShell 示例：
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
-git clone https://github.com/songyuhao95/agent-skills.git "$env:TEMP\agent-skills"
+git clone https://github.com/songyuhao95/astock-analyst.git "$env:TEMP\agent-skills"
 Copy-Item "$env:TEMP\agent-skills\astock-analyst" "$env:USERPROFILE\.claude\skills" -Recurse -Force
 ```
 
