@@ -1,65 +1,39 @@
-# 持仓可视化
+# 图表辅助
 
-`pip install matplotlib numpy`
+只有当用户明确要求生成图表或可视化时才读取本文件。普通持仓建议不需要输出图表。
 
-## 仓位分布饼图
+## 推荐图表
 
-```python
-import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.rcParams['font.family'] = 'PingFang SC'  # Windows改SimHei
-matplotlib.rcParams['axes.unicode_minus'] = False
+| 场景 | 图表 |
+|---|---|
+| 持仓复盘 | 仓位分布饼图 |
+| 盈亏分析 | 持仓盈亏柱状图 |
+| 趋势判断 | 价格 + MA5/MA10/MA20 |
+| 风险线说明 | 当前价、支撑、压力、止损线 |
 
-持仓 = {                  # 修改为你的持仓市值
-    '半导体ETF': 20800,
-    '航天电子':  20120,
-    '中国西电':  19019,
-    '恩捷股份':  17056,
-    '化工ETF':    4590,
-    '现金':       4306,
-}
+## 最小绘图要求
 
-名称 = list(持仓.keys())
-市值 = list(持仓.values())
-fig, ax = plt.subplots(figsize=(8, 6))
-ax.pie(市值, labels=名称, autopct='%1.1f%%', startangle=140,
-       colors=['#4C8EFF','#3FB950','#F0B429','#F85149','#BC8CFF','#8B949E'],
-       explode=[0.04]*len(名称), wedgeprops=dict(linewidth=1.5, edgecolor='white'))
-ax.set_title(f'仓位分布  总资产¥{sum(市值):,.0f}', fontsize=14, pad=20)
-plt.tight_layout()
-plt.savefig('仓位分布.png', dpi=150, bbox_inches='tight')
-plt.show()
-```
+- 标题包含日期、总资产或标的名称。
+- 颜色保持A股习惯：红涨绿跌。
+- 坐标、图例、单位必须清楚。
+- 图表只服务结论，不替代文字建议。
 
-## 持仓盈亏柱状图
+## 数据字段
 
-```python
-持仓数据 = [          # (名称, 成本价, 现价, 股数)
-    ('半导体ETF', 0.919, 1.040, 20000),
-    ('航天电子',  25.226, 25.150, 800),
-    ('中国西电',  16.151, 17.290, 1100),
-    ('恩捷股份',  87.495, 85.280, 200),
-    ('化工ETF',   0.949,  1.020, 4500),
-]
+持仓图表至少需要：
 
-名称  = [d[0] for d in 持仓数据]
-盈亏额 = [(d[2]-d[1])*d[3] for d in 持仓数据]
-盈亏率 = [(d[2]/d[1]-1)*100 for d in 持仓数据]
-颜色  = ['#F85149' if v>=0 else '#3FB950' for v in 盈亏额]
+| 字段 | 说明 |
+|---|---|
+| 股票名称 | 完整名称 |
+| 持有市值 | 用于仓位分布 |
+| 持有盈亏 | 用于盈亏柱状图 |
+| 仓位% | 用于组合风险 |
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-for ax, vals, title, fmt in [
-    (ax1, 盈亏额, '持仓盈亏（元）', '¥{:+.0f}'),
-    (ax2, 盈亏率, '持仓盈亏（%）', '{:+.2f}%')]:
-    bars = ax.bar(名称, vals, color=颜色, width=0.5, edgecolor='white', lw=1.5)
-    ax.axhline(0, color='gray', lw=0.8, ls='--')
-    ax.set_title(title, fontsize=13)
-    for bar, val in zip(bars, vals):
-        ax.text(bar.get_x()+bar.get_width()/2,
-                bar.get_height()+(max(vals, default=0)*0.03 if max(vals,default=0)>0 else 0),
-                fmt.format(val), ha='center', fontsize=9)
+趋势图表至少需要：
 
-plt.tight_layout()
-plt.savefig('持仓盈亏.png', dpi=150, bbox_inches='tight')
-plt.show()
-```
+| 字段 | 说明 |
+|---|---|
+| 日期 | 日线时间序列 |
+| 收盘价 | 趋势主体 |
+| MA5/MA10/MA20 | 趋势层级 |
+| 成交额或成交量 | 量能确认 |
